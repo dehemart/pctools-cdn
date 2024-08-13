@@ -1,0 +1,59 @@
+name: Deploy
+
+# on: workflow_dispatch
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: |
+          cd pctools-back
+          yarn install
+          yarn prisma generate
+          yarn build
+          cp ../ecosystem.config.js .
+          cp ../docker-compose.yml .
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "pctools-back"
+          target: /home/dehema
+          overwrite: true
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          # key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: | 
+            source .bashrc
+            cd /home/dehema/pctools-back
+            yarn build
+            rm -fr ./dist/.env
+            rm -fr .env
+            echo DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres >> .env 
+            echo DATABASE_USER=postgres >> .env 
+            echo DATABASE_PASS=postgres >> .env 
+            echo DATABASE_NAME=postgres >> .env 
+            echo SERVER_PORT=3331 >> .env 
+            cp .env ./dist
+            docker compose restart
+            pm2 restart ecosystem.config.js
