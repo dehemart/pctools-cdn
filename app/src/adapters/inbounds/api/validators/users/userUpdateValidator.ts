@@ -8,6 +8,9 @@ export class UserUpdateValidator {
   private getByIdValidationScheme: z.AnyZodObject;
   private validator: Validator;
 
+
+
+
   constructor() {
     this.validator = new Validator();
     this.getByIdValidationScheme = z.object({
@@ -16,11 +19,10 @@ export class UserUpdateValidator {
 
     this.validator = new Validator();
     this.updateValidationScheme = z.object({
-      username: z.string().min(3).or(z.undefined()),
       email: z.string().email().or(z.undefined()),
-      phoneNumber: z.string().min(10).or(z.undefined()),
       password: z.string().min(4).or(z.undefined()),
       active: z.boolean().optional().or(z.undefined()),
+
     }) satisfies z.ZodType<UserUpdateDTO>;
   }
 

@@ -23,9 +23,7 @@ export class UserUpdateUseCase {
           id: Number(identificador.id),
         },
         data: {
-          username: data.username,
           email: data.email,
-          phoneNumber: data.phoneNumber,
           password: data.password != null ? await hashPassword(data.password) : undefined,
           active: data.active != null ? data.active : undefined,
         },

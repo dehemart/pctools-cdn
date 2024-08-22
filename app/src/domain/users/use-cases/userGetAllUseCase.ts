@@ -13,7 +13,7 @@ export class UserGetAllUseCase {
       const page_current = Math.max(Number(data.page || 1), 1);
       const page_size = Number(data.limit || 40);
 
-      const [total, user] = await this.prisma.$transaction([
+      const [total, users] = await this.prisma.$transaction([
         this.prisma.user.count(),
         this.prisma.user.findMany({
           omit: {
@@ -25,24 +25,19 @@ export class UserGetAllUseCase {
             active: {
               equals: data.active == false ? false : true
             },
-            username: {
-              contains: data.username,
-              mode: 'insensitive'
-            },
             email: {
               contains: data.email,
               mode: 'insensitive'
             },
-            phoneNumber: {
-              contains: data.phoneNumber,
-              mode: 'insensitive'
-            },
           },
+          orderBy: [
+            { email: data.orderByEmail },
+          ]
         })
       ]);
 
       const output: PaginatedOutputDto<UserResponseDTO> = {
-        data: user,
+        data: users,
         meta: [{
           currentPage: page_current,
           lastPage: Math.ceil(total / page_size),

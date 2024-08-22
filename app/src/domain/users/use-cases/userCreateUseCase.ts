@@ -11,9 +11,7 @@ export class UserCreateUseCase {
     try {
       const userCreated = await this.prisma.user.create({
         data: {
-          username: data.username,
           email: data.email,
-          phoneNumber: data.phoneNumber,
           password: await hashPassword(data.password),
           active: true,
         },

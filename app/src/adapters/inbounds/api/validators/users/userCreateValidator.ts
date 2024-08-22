@@ -9,9 +9,7 @@ export class UserCreateValidator {
   constructor() {
     this.validator = new Validator();
     this.createValidationScheme = z.object({
-      username: z.string().min(3),
       email: z.string().email(),
-      phoneNumber: z.string().min(10),
       password: z.string().min(4),
     }) satisfies z.ZodType<UserCreateDTO>;
   }

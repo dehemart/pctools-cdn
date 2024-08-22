@@ -17,7 +17,7 @@ export class LoginUseCase {
     try {
       const userById = await this.prisma.user.findFirstOrThrow({
         where: {
-          username: data.username,
+          email: data.email,
         }
       });
 
@@ -36,7 +36,6 @@ export class LoginUseCase {
 
       const userLogged: LoggedDTO = {
         id: userById.id,
-        username: userById.username,
         email: userById.email,
         token: token,
         active: userById.active,
