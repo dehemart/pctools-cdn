@@ -1,5 +1,5 @@
 <div align='center'>
-    <h1><b>PC-Images:: Backend</b></.h1>
+    <h1><b>pctools-cdn:: Backend</b></.h1>
     <br />
     <p>CDN of PC-tools.</p>
 
@@ -32,13 +32,13 @@ PCTools is a consignment manager application;
 1. clone the repo
 
 ```
-git clone https://github.com/dehemart/pctools-back
+git clone https://github.com/dehemart/pctools-cdn
 ```
 
 2. cd into cloned repo
 
 ```
-cd pctools-back
+cd pctools-cdn
 ```
 
 3. install dependencies
