@@ -72,7 +72,7 @@ export const expressWinstonLogger = expressWinston.logger({
 
     if (res){
       meta.httpRequest = httpRequest;
-      httpRequest.body = req.body.toString();
+      httpRequest.body = req.body.file != undefined ? req.body.file : req.body.toString;
     }
     return meta;
 
