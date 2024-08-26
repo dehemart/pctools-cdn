@@ -33,15 +33,21 @@ export class ImageUploadMiddleware {
 
       try {
         const fileName = `${id}${suffix}${path.extname(req.file!.originalname)}`;
+        const thumbnailFileName = `${id}_thumbnail${path.extname(req.file!.originalname)}`;
         const saveTo = path.resolve(dirname(require!.main!.filename), 'public', 'images');
         const filePath = path.join(saveTo, fileName);
+        const thumbnailFilePath = path.join(saveTo, thumbnailFileName);
 
         await sharp(req.file!.buffer)
-          // .resize(500, 500,{
-          //   fit: sharp.fit.cover
-          // })
           .jpeg({ quality: 80 })
           .toFile(filePath);
+
+        await sharp(req.file!.buffer)
+          .resize(150, 150,{
+            fit: sharp.fit.cover
+          })
+          .jpeg({ quality: 60 })
+          .toFile(thumbnailFilePath);
 
         req.file!.filename = fileName;
 
