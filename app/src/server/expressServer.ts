@@ -18,7 +18,7 @@ export default class ExpressServer {
     this.server.use(expressWinstonLogger);
     this.server.use(express.json());
 
-    this.server.use('/*', this.authMidleware.execute);
+    // this.server.use('/*', this.authMidleware.execute);
     this.serverRoutes.setRoutes(this.router);
     this.server.use(process.env.BASE_ROUTE || '', this.router);
   }
