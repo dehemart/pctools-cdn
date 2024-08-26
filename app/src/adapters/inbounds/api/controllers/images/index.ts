@@ -3,6 +3,7 @@ import { ImageDeleteController } from '@controllers/images/imageDeleteController
 import { ImageGetAllController } from '@controllers/images/imageGetAllController';
 import { ImageGetByIdController } from '@controllers/images/imageGetByIdController';
 import { ImageUpdateController } from '@controllers/images/imageUpdateController';
+import { ImageUploadMiddleware } from '@middlewares/image/imageUploadMiddleware';
 import { Router } from 'express';
 
 export default class ImageRoute {
@@ -11,6 +12,7 @@ export default class ImageRoute {
   private imageGetByIdController: ImageGetByIdController;
   private imageUpdateController: ImageUpdateController;
   private imageDeleteController: ImageDeleteController;
+  private imageUploadMiddleware: ImageUploadMiddleware;
 
   constructor() {
     this.imageCreateController = new ImageCreateController();
@@ -18,12 +20,13 @@ export default class ImageRoute {
     this.imageGetByIdController = new ImageGetByIdController();
     this.imageUpdateController = new ImageUpdateController();
     this.imageDeleteController = new ImageDeleteController();
+    this.imageUploadMiddleware = new ImageUploadMiddleware();
 
   }
 
   registerRoutes(router: Router) {
-    router.post('/images/:id/:suffix', this.imageCreateController.route);
-    router.post('/images/:id', this.imageCreateController.route);
+    router.post('/images/:id/:suffix', this.imageUploadMiddleware.execute, this.imageCreateController.route);
+    router.post('/images/:id', this.imageUploadMiddleware.execute, this.imageCreateController.route);
 
     router.get('/images/:id', this.imageGetAllController.route);
     router.get('/images/:id/:suffix', this.imageGetByIdController.route);

@@ -8,12 +8,15 @@ export class ImageUploadMiddleware {
 
   execute(req: Request, res: Response, next: NextFunction) {
     const upload = multer(multerConfig).single('image');
+    const id = req.params.id;
+    const suffix = req.params.suffix != undefined ? '_' + req.params.suffix : '';
+
 
     upload(req, res, async (err) => {
-      if (err) {
+      if (err instanceof multer.MulterError) {
         try {
           switch (err.code) {
-          case 'LIMIT_INVALID_TYPE':
+          case 'LIMIT_UNEXPECTED_FILE':
             throw new Error('Invalid file type! Only PNG and JPEG are allowed');
 
           case 'LIMIT_FILE_SIZE':
@@ -29,7 +32,7 @@ export class ImageUploadMiddleware {
       }
 
       try {
-        const fileName = `${Date.now()}${path.extname(req.file!.originalname)}`;
+        const fileName = `${id}${suffix}${path.extname(req.file!.originalname)}`;
         const saveTo = path.resolve(dirname(require!.main!.filename), 'public', 'images');
         const filePath = path.join(saveTo, fileName);
 
