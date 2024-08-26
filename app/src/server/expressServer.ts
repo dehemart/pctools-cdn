@@ -20,7 +20,7 @@ export default class ExpressServer {
 
     this.server.use('/*', this.authMidleware.execute);
     this.serverRoutes.setRoutes(this.router);
-    this.server.use(process.env.BASE_ROUTE || '', this.router)
+    this.server.use(process.env.BASE_ROUTE || '', this.router);
   }
 
   getPort(): number {
