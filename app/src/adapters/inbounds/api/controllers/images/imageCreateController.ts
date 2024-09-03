@@ -5,6 +5,6 @@ export class ImageCreateController {
 
   route = async (req: Request, res: Response): Promise<Response> => {
 
-    return res.status(StatusCodes.CREATED).json({message : 'Create in development'});
+    return res.status(StatusCodes.CREATED).json({message : 'Create in development', file: req.file?.filename});
   };
 }

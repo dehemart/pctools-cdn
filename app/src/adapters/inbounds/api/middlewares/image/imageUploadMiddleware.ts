@@ -11,7 +11,6 @@ export class ImageUploadMiddleware {
     const id = req.params.id;
     const suffix = req.params.suffix != undefined ? '_' + req.params.suffix : '';
 
-
     upload(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
         try {
@@ -32,7 +31,7 @@ export class ImageUploadMiddleware {
       }
 
       try {
-        const fileName = `${id}${suffix}${path.extname(req.file!.originalname)}`;
+        const fileName = `${id}_${suffix}${path.extname(req.file!.originalname)}`;
         const thumbnailFileName = `${id}_thumbnail${path.extname(req.file!.originalname)}`;
         const saveTo = path.resolve(dirname(require!.main!.filename), 'public', 'images');
         const filePath = path.join(saveTo, fileName);
@@ -44,7 +43,7 @@ export class ImageUploadMiddleware {
 
         await sharp(req.file!.buffer)
           .resize(150, 150,{
-            fit: sharp.fit.cover
+            fit: sharp.fit.inside
           })
           .jpeg({ quality: 60 })
           .toFile(thumbnailFilePath);
