@@ -9,7 +9,6 @@ export class ImageUploadMiddleware {
   execute(req: Request, res: Response, next: NextFunction) {
     const upload = multer(multerConfig).single('image');
     const id = req.params.id;
-    const suffix = req.params.suffix != undefined ? '_' + req.params.suffix : '';
 
     upload(req, res, async (err) => {
       if (err instanceof multer.MulterError) {
@@ -31,7 +30,7 @@ export class ImageUploadMiddleware {
       }
 
       try {
-        const fileName = `${id}_${suffix}${path.extname(req.file!.originalname)}`;
+        const fileName = `${id}${path.extname(req.file!.originalname)}`;
         const thumbnailFileName = `${id}_thumbnail${path.extname(req.file!.originalname)}`;
         const saveTo = path.resolve(dirname(require!.main!.filename), 'public', 'images');
         const filePath = path.join(saveTo, fileName);
