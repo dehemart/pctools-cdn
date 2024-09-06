@@ -1,8 +1,7 @@
-import { auth } from '@config/environment';
+import { AppEnvironment } from '@config/appEnvironment';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { verify } from 'jsonwebtoken';
-import { exit } from 'process';
 
 type tokenPayload = {
   id: string,
@@ -15,8 +14,8 @@ export class AuthMiddleware {
 
   execute(req: Request, res: Response, next: NextFunction) {
 
-    const loginUrl = (process.env.BASE_ROUTE || '') + '/login';
-    const userUrl = (process.env.BASE_ROUTE || '') + '/users';
+    const loginUrl = AppEnvironment.baseRoute + '/login';
+    const userUrl = AppEnvironment.baseRoute + '/users';
     if ((req.baseUrl == loginUrl || req.baseUrl == userUrl) && (req.method == 'POST')) {
       next();
     } else {
@@ -29,7 +28,7 @@ export class AuthMiddleware {
       const [, token] = authorization.split(' ');
 
       try {
-        const verified = verify(token, auth.secret);
+        const verified = verify(token, AppEnvironment.auth.secret);
         const { id } = verified as tokenPayload;
 
         res.set('userId', id);

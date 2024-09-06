@@ -2,6 +2,7 @@ import express from 'express';
 import ServerRoutes from '@controllers/index';
 import { expressWinstonLogger } from '@logger/logger';
 import { AuthMiddleware } from '@middlewares/authorization/authMiddleware';
+import { AppEnvironment } from '@config/appEnvironment';
 
 export default class ExpressServer {
   private server = express();
@@ -12,7 +13,7 @@ export default class ExpressServer {
 
   constructor() {
     this.authMidleware = new AuthMiddleware;
-    this.serverPort = parseInt(process.env.SERVER_PORT || '3331');
+    this.serverPort = AppEnvironment.serverPort;
     this.serverRoutes = new ServerRoutes();
 
     this.server.use(expressWinstonLogger);
@@ -20,7 +21,7 @@ export default class ExpressServer {
 
     // this.server.use('/*', this.authMidleware.execute);
     this.serverRoutes.setRoutes(this.router);
-    this.server.use(process.env.BASE_ROUTE || '', this.router);
+    this.server.use(AppEnvironment.baseRoute, this.router);
   }
 
   getPort(): number {

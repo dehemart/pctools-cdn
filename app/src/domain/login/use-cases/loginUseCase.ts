@@ -3,7 +3,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaClientInitializationError, PrismaClientRustPanicError, PrismaClientUnknownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
 import { sign } from 'jsonwebtoken';
 import { comparePassword } from '@utils/crypt/cryptUtil';
-import { auth } from '@config/environment';
+import { auth } from '@config/appEnvironment';
 import { LoginDTO } from '@login/dtos/loginDTO';
 import { LoggedDTO } from '@login/dtos/loggedDTO';
 
